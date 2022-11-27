@@ -10,9 +10,9 @@ clean:
 	rm -rf $(SERVER) $(CLIENT)
 
 $(SERVER): $(SERVER).c
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@.out $^
 
 $(CLIENT): $(CLIENT).c
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@.out $^
 
 .PHONY: all, clean
