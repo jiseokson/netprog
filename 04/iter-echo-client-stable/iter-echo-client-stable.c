@@ -49,7 +49,7 @@ int main(int ac, char **av)
 
         ssize_t len = write(sock, buffer, strlen(buffer));
         while (received < len) {
-            ssize_t readed = read(sock, buffer, BUFFER_SIZE - 1);
+            ssize_t readed = read(sock, buffer + received, BUFFER_SIZE - 1);
             if (readed < -1)
                 error_handling("read() error");
             buffer[readed] = '\0';
