@@ -46,8 +46,21 @@ int main(int ac, char **av)
         int n;
         printf("num %d: ", i);
         scanf("%d", &n);
-        write(client_socket, &n, 4);
+        write(client_socket, &n, sizeof(int));
     }
+
+    ssize_t received = 0;
+    ssize_t readed = 0;
+    char buffer[BUFFER_SIZE];
+    while (received < sizeof(int)) {
+        readed = read(client_socket, buffer + received, BUFFER_SIZE - received);
+        if (readed == -1)
+            error_handling("read() error");
+        received += readed;
+    }
+
+    int res = *(int *)&buffer;
+    printf("Result from calc server: %d\n", res);
 
     close(client_socket);
     return 0;

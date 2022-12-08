@@ -52,7 +52,7 @@ int main(int ac, char **av)
 
     char operator;
     char operand_cnt = 0;
-    char buffer[BUFFER_SIZE];
+    unsigned char buffer[BUFFER_SIZE];
 
     while (received < 1) {
         readed = read(client_socket, &operator, 1);
@@ -75,12 +75,32 @@ int main(int ac, char **av)
         received += readed;
     }
 
-    // for test
+    // for debug
     printf("operator: %c, operand cnt: %d\n", operator, operand_cnt);
     printf("num stream\n");
     for (int i = 0; i < received; ++i)
         printf("%.2x ", buffer[i]);
     printf("\n");
+
+    int *nums = (int *)buffer;
+    for (int i = 0; i < operand_cnt; ++i)
+        printf("nums[%d]: %d\n", i, nums[i]);
+    int ret = nums[0];
+    for (int i = 1; i < operand_cnt; ++i) {
+        switch (operator) {
+        case '+':
+            ret += nums[i];
+            break;
+        case '-':
+            ret -= nums[i];
+            break;
+        default:
+            ret = 0;
+            break;
+        }
+    }
+    printf("res: %d\n", ret);
+    write(client_socket, &ret, sizeof(int));
 
     close(client_socket);
     close(server_socket);
